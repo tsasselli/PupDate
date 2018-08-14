@@ -5,14 +5,16 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
-import { ValueComponent } from './value/value.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { HomeComponent } from './home/home.component';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ValueComponent,
-    NavBarComponent
+    NavBarComponent,
+    HomeComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
