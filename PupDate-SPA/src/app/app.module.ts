@@ -10,6 +10,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+
 
 @NgModule({
   declarations: [
@@ -22,6 +24,7 @@ import { RegisterComponent } from './register/register.component';
     BrowserModule,
     FormsModule,
     HttpClientModule,
+    BsDropdownModule.forRoot(),
   ],
   providers: [
     AuthService,
