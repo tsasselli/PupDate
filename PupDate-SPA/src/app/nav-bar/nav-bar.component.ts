@@ -19,6 +19,7 @@ export class NavBarComponent implements OnInit {
   }
 
   login() {
+    debugger;
     this.authService.login(this.model).subscribe(next => {
       this.alertify.success("Logged in successfully")
     }, error => {
