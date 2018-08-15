@@ -1,3 +1,4 @@
+import { UserService } from './_services/user.service';
 import { AuthGuard } from './_guard/auth.guard';
 import { AlertifyService } from './_services/alertify.service';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
@@ -40,6 +41,7 @@ import { AppRoutingModule } from './/app-routing.module';
     AuthGuard,
     ErrorInterceptorProvider,
     AlertifyService,
+    UserService,
   ],
   bootstrap: [AppComponent]
 })
