@@ -5,6 +5,8 @@ import { Photo } from './../../_models/Photo';
 import { Component, OnInit, Input } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 import { AuthService } from '../../_services/auth.service';
+import { Output } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-photo-editor',
@@ -14,6 +16,7 @@ import { AuthService } from '../../_services/auth.service';
 export class PhotoEditorComponent implements OnInit {
 
   @Input() photos: Photo[];
+  @Output() getMemberPhotoChange = new EventEmitter<string>();
   uploader: FileUploader// = new FileUploader({ url: URL });
   hasBaseDropZoneOver: boolean = false;
   baseUrl = environment.apiUrl;
@@ -65,7 +68,8 @@ export class PhotoEditorComponent implements OnInit {
       this.currentMainPhoto = this.photos.filter(p => p.isMain === true)[0];
       this.currentMainPhoto.isMain = false;
       photo.isMain = true;
-      // need to output value to parent component so it updates ui
+      // outputs value to parent component so it updates ui
+      this.getMemberPhotoChange.emit(photo.url);
     }, error => {
       this.alertify.error(error)
     });
