@@ -87,8 +87,9 @@ namespace PupDate.API.Controllers
             photoForCreationDto.PublicId = uploadResult.PublicId;
 
             var photo = _mapper.Map<Photo>(photoForCreationDto);
-
+            // if not the first photo move past statement
             if (!userFromRepo.Photos.Any(u => u.IsMain))
+                // if is the first photo then make main.
                 photo.IsMain = true;
             // adds the photo
             userFromRepo.Photos.Add(photo);
