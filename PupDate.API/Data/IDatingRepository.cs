@@ -14,6 +14,8 @@ namespace PupDate.API.Data
         Task<User> GetUser(int id);
 
         Task<Photo> GetPhoto(int id);
+
+        Task<Photo> GetMainPhotoForUser(int id);
          
     }
 }

@@ -103,5 +103,35 @@ namespace PupDate.API.Controllers
             }
             return BadRequest("Could not add the photo");
         }
+
+        [HttpPost("{id}/setMain")]
+        
+        public async Task<IActionResult> SetMainPhoto(int userId, int id)
+        {    // check to see if user is authorized
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var user = await _repo.GetUser(userId);
+            // checks if the id matches the users photo collection in the repo
+            if (!user.Photos.Any(p => p.Id == id))
+                return Unauthorized();
+            
+            var photoFromRepo = await _repo.GetPhoto(id);
+            // checks if the photo returned from the repo is already the main photo or not
+            if (photoFromRepo.IsMain)
+                return BadRequest("This is already the main photo");
+            // get the current main photo from the repository
+            var currentMainPhoto = await _repo.GetMainPhotoForUser(userId);
+            // changes the value of the current to false
+            currentMainPhoto.IsMain = false;
+            // sets the selected photo to true
+            photoFromRepo.IsMain = true;
+
+            if (await _repo.SaveAll())
+                return NoContent();
+
+            return BadRequest("Could not set photo to main");
+
+        }
     }
 }
