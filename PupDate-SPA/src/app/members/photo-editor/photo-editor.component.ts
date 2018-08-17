@@ -1,3 +1,5 @@
+import { AlertifyService } from './../../_services/alertify.service';
+import { UserService } from './../../_services/user.service';
 import { environment } from './../../../environments/environment';
 import { Photo } from './../../_models/Photo';
 import { Component, OnInit, Input } from '@angular/core';
@@ -15,8 +17,10 @@ export class PhotoEditorComponent implements OnInit {
   uploader: FileUploader// = new FileUploader({ url: URL });
   hasBaseDropZoneOver: boolean = false;
   baseUrl = environment.apiUrl;
+  currentMainPhoto: Photo;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private userService: UserService,
+              private alertify: AlertifyService) { }
 
   ngOnInit() {
     this.initalizeUploader();
@@ -55,4 +59,15 @@ export class PhotoEditorComponent implements OnInit {
     }
   }
 
+  setMainPhoto(photo: Photo) {
+    this.userService.setMainPhoto(this.authService.decodedToken.nameid, photo.id).subscribe(() => {
+      // gets the main photo then assigns it to the current main property
+      this.currentMainPhoto = this.photos.filter(p => p.isMain === true)[0];
+      this.currentMainPhoto.isMain = false;
+      photo.isMain = true;
+      // need to output value to parent component so it updates ui
+    }, error => {
+      this.alertify.error(error)
+    });
+  }
 }
