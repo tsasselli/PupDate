@@ -27,6 +27,7 @@ import { MemberDetailComponent } from './members/member-detail/member-detail.com
 import { NgxGalleryModule } from 'ngx-gallery';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
+import { FileUploadModule } from 'ng2-file-upload';
 
 
 export function tokenGetter() {
@@ -54,6 +55,7 @@ export function tokenGetter() {
     BsDropdownModule.forRoot(),
     AppRoutingModule,
     NgxGalleryModule,
+    FileUploadModule,
     TabsModule.forRoot(),
     JwtModule.forRoot({
       config: {
