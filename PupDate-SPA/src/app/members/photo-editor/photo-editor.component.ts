@@ -69,7 +69,11 @@ export class PhotoEditorComponent implements OnInit {
       this.currentMainPhoto.isMain = false;
       photo.isMain = true;
       // outputs value to parent component so it updates ui
-      this.getMemberPhotoChange.emit(photo.url);
+      //this.getMemberPhotoChange.emit(photo.url);
+      this.authService.changeMemberPhoto(photo.url);
+      this.authService.currentUser.photoUrl = photo.url;
+      // updates local storage with the newly changed photo
+      localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
     }, error => {
       this.alertify.error(error)
     });
