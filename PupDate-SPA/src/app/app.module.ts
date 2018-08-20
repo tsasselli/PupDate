@@ -28,6 +28,8 @@ import { NgxGalleryModule } from 'ngx-gallery';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { FileUploadModule } from 'ng2-file-upload';
+import { TimeAgoPipe } from 'time-ago-pipe';
+
 
 
 export function tokenGetter() {
@@ -37,6 +39,7 @@ export function tokenGetter() {
 @NgModule({
   declarations: [
     AppComponent,
+    TimeAgoPipe,
     NavBarComponent,
     HomeComponent,
     RegisterComponent,
