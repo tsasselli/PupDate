@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using PupDate.API.helpers;
 using PupDate.API.Models;
 
 namespace PupDate.API.Data
@@ -44,10 +45,23 @@ namespace PupDate.API.Data
             return user;
         }
 
-        public async Task<IEnumerable<User>> GetUsers()
+        public Task<PagedList<User>> GetUser(UserParameters userParameters)
         {
-            var users = await _context.Users.Include(p => p.Photos).ToListAsync();
-            return users;
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<PagedList<User>> GetUsers(UserParameters userParameters)
+        {
+            var users =  _context.Users.Include(p => p.Photos);
+
+            return await PagedList<User>.CreateAsync(users, userParameters.PageNumber, userParameters.PageSize);
+
+        }
+
+
+        public Task<IEnumerable<User>> GetUsers()
+        {
+            throw new System.NotImplementedException();
         }
 
         public async Task<bool> SaveAll()
