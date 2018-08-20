@@ -10,14 +10,14 @@ import { ErrorInterceptorProvider } from './_services/error.interceptor';
 import { AuthService } from './_services/auth.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
-import { BsDropdownModule, TabsModule } from 'ngx-bootstrap';
+import { BsDropdownModule, TabsModule, BsDatepickerModule } from 'ngx-bootstrap';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { ListsComponent } from './lists/lists.component';
 import { MessagesComponent } from './messages/messages.component';
@@ -50,6 +50,7 @@ export function tokenGetter() {
   ],
   imports: [
     BrowserModule,
+    ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
     BsDropdownModule.forRoot(),
@@ -57,6 +58,7 @@ export function tokenGetter() {
     NgxGalleryModule,
     FileUploadModule,
     TabsModule.forRoot(),
+    BsDatepickerModule.forRoot(),
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
