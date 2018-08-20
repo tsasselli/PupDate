@@ -17,7 +17,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
-import { BsDropdownModule, TabsModule, BsDatepickerModule } from 'ngx-bootstrap';
+import { BsDropdownModule, TabsModule, BsDatepickerModule, PaginationModule } from 'ngx-bootstrap';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { ListsComponent } from './lists/lists.component';
 import { MessagesComponent } from './messages/messages.component';
@@ -60,6 +60,7 @@ export function tokenGetter() {
     AppRoutingModule,
     NgxGalleryModule,
     FileUploadModule,
+    PaginationModule.forRoot(),
     TabsModule.forRoot(),
     BsDatepickerModule.forRoot(),
     JwtModule.forRoot({
