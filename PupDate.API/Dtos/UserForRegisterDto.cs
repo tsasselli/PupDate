@@ -6,7 +6,6 @@ namespace PupDate.API.Dtos
     public class UserForRegisterDto
     {
         [Required]
-        [StringLength(10, MinimumLength = 4, ErrorMessage = "You must have a password between 4 and 10 characters")]
         public string Username { get; set; }
 
         [Required]

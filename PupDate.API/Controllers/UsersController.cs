@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PupDate.API.Data;
 using PupDate.API.Dtos;
+using PupDate.API.helpers;
 
 namespace PupDate.API.Controllers
-{
+{   
+    [ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
