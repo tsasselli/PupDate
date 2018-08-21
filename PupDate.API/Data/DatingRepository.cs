@@ -26,6 +26,12 @@ namespace PupDate.API.Data
             _context.Remove(entity);
         }
 
+        public async Task<Like> GetLike(int userId, int recipientId)
+        {   
+            return await _context.Likes.FirstOrDefaultAsync(user => 
+                user.LikerId == userId && user.LikeeId == recipientId);
+        }
+
         public async Task<Photo> GetMainPhotoForUser(int userId)
         {   // 
             return await _context.Photos.Where(u => u.UserId == userId)
@@ -77,11 +83,6 @@ namespace PupDate.API.Data
             return await PagedList<User>.CreateAsync(users, userParameters.PageNumber, userParameters.PageSize);
         }
 
-
-        public Task<IEnumerable<User>> GetUsers()
-        {
-            throw new System.NotImplementedException();
-        }
 
         public async Task<bool> SaveAll()
         {
