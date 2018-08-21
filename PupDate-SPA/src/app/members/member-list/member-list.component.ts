@@ -13,6 +13,9 @@ import { AlertifyService } from '../../_services/alertify.service';
 export class MemberListComponent implements OnInit {
   
   users: User[];
+  user: User = JSON.parse(localStorage.getItem('user'));
+  userParameters: any = {};
+  genderList = [{value: 'male', display: 'Males'}, {value: 'female', display: 'Females'}];
   pagination: Pagination;
 
   constructor(private userService: UserService, private alertify: AlertifyService, 
@@ -23,6 +26,17 @@ export class MemberListComponent implements OnInit {
       this.users = data['users'].result;
       this.pagination = data['users'].pagination;
     });
+
+    this.userParameters.gender = this.user.gender === 'female' ? 'male' : 'female';
+    this.userParameters.minAge = 18;
+    this.userParameters.maxAge = 99;
+  }
+
+  resetFilters() {
+    this.userParameters.gender = this.user.gender === 'female' ? 'male' : 'female';
+    this.userParameters.minAge = 18;
+    this.userParameters.maxAge = 99;
+    this.loadUsers();
   }
 
   pageChanged(event: any): void {
@@ -31,7 +45,7 @@ export class MemberListComponent implements OnInit {
   }
 
   loadUsers() {
-    this.userService.getUsers(this.pagination.currentPage, this.pagination.itemsPerPage).subscribe((result: PaginationResult<User[]>) => {
+    this.userService.getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, this.userParameters).subscribe((result: PaginationResult<User[]>) => {
       this.users = result.result;
       this.pagination = result.pagination;
     }, error => {

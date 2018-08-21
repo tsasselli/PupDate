@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace PupDate.API.Data
         public async Task<Photo> GetPhoto(int id)
         {  // returns the first or default that matches the id of the user that I pass in.
             var photo = await _context.Photos.FirstOrDefaultAsync(p => p.Id == id);
-            
+
             return photo;
         }
 
@@ -45,17 +46,23 @@ namespace PupDate.API.Data
             return user;
         }
 
-        public Task<PagedList<User>> GetUser(UserParameters userParameters)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public async Task<PagedList<User>> GetUsers(UserParameters userParameters)
         {
-            var users =  _context.Users.Include(p => p.Photos);
+            var users = _context.Users.Include(p => p.Photos).AsQueryable();
+
+            users = users.Where(user => user.Id != userParameters.UserId);
+            // filter for gender
+            users = users.Where(user => user.Gender == userParameters.Gender);
+            // check for min and max age
+            if (userParameters.MinimumAge != 18 || userParameters.MaxAge != 99)
+            {
+                var minDob = DateTime.Today.AddYears(-userParameters.MaxAge - 1);
+                var maxDob = DateTime.Today.AddYears(-userParameters.MinimumAge);
+
+                users = users.Where(user => user.DateOfBirth >= minDob && user.DateOfBirth <= maxDob);
+            }
 
             return await PagedList<User>.CreateAsync(users, userParameters.PageNumber, userParameters.PageSize);
-
         }
 
 
@@ -67,7 +74,6 @@ namespace PupDate.API.Data
         public async Task<bool> SaveAll()
         {
             return await _context.SaveChangesAsync() > 0;
-
         }
     }
 }
