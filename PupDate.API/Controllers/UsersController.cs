@@ -89,7 +89,7 @@ namespace PupDate.API.Controllers
             var like = await _repo.GetLike(id, likeeId);
             // blocks user from liking twice
             if (like != null)
-                return BadRequest("You already liked this user");
+                return BadRequest("You've already liked this user");
 
             if (await _repo.GetUser(likeeId) == null)
                 return NotFound();
@@ -105,7 +105,7 @@ namespace PupDate.API.Controllers
             if (await _repo.SaveAll())
                 return Ok();
 
-            return BadRequest("Failed to like user");
+            return BadRequest("Failed to like user, please try again later");
         }
     }
 }

@@ -1,3 +1,4 @@
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { PaginationResult } from './../_models/pagination';
 import { Observable } from 'rxjs';
 import { User } from './../_models/user';
@@ -20,7 +21,7 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  getUsers(page?, itemsPerPage?, userParameters?): Observable<PaginationResult<User[]>> {
+  getUsers(page?, itemsPerPage?, userParameters?, likesParameters?): Observable<PaginationResult<User[]>> {
     const paginatedResults: PaginationResult<User[]> = new PaginationResult<User[]>();
 
     let params = new HttpParams();
@@ -35,6 +36,16 @@ export class UserService {
       params = params.append('maxAge', userParameters.maxAge);
       params = params.append('gender', userParameters.gender);
       params = params.append('orderBy', userParameters.orderBy);
+    }
+
+    if (likesParameters === 'Likers')
+    {
+      params = params.append('likers', 'true')
+    }
+
+    if (likesParameters === 'Likees')
+    {
+      params = params.append('likees', 'true')
     }
 
     return this.http.get<User[]>(this.baseUrl + 'users', { observe: 'response', params})
@@ -64,4 +75,10 @@ export class UserService {
   deletePhoto(userId: number, id: number) {
     return this.http.delete(this.baseUrl + 'users/' + userId + "/photos/" + id);
   }
+
+  sendLikeToDb(id: number, recipientId: number) {
+    return this.http.post(this.baseUrl + 'users/' + id + '/like/' + recipientId, {});
+  }
+
+
 }
