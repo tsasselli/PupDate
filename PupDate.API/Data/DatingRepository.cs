@@ -59,9 +59,23 @@ namespace PupDate.API.Data
             users = users.Where(user => user.Id != userParameters.UserId);
             // filter for gender
             users = users.Where(user => user.Gender == userParameters.Gender);
+
+            if (userParameters.Likers)
+            {   // if any of the likers matches any of the id's in the table, will return those users 
+                var userLikers = await GetUserLikes(userParameters.UserId, userParameters.Likers);
+                users = users.Where(u => userLikers.Contains(u.Id));
+            }
+
+            if (userParameters.Likees)
+            {
+                var userLikees = await GetUserLikes(userParameters.UserId, userParameters.Likers);
+                users = users.Where(u => userLikees.Contains(u.Id));
+            }
+
             // check for min and max age
             if (userParameters.MinimumAge != 18 || userParameters.MaxAge != 99)
             {
+
                 var minDob = DateTime.Today.AddYears(-userParameters.MaxAge - 1);
                 var maxDob = DateTime.Today.AddYears(-userParameters.MinimumAge);
 
@@ -87,6 +101,26 @@ namespace PupDate.API.Data
         public async Task<bool> SaveAll()
         {
             return await _context.SaveChangesAsync() > 0;
+        }
+
+         //  only return users that contain either the liker iD or likerId thats requsted in the parameters.
+        private async Task<IEnumerable<int>> GetUserLikes(int id, bool likers)
+        {
+            var user = await _context.Users
+                .Include(x => x.Likers)
+                .Include(x => x.Likees)
+                .FirstOrDefaultAsync(y => y.Id == id);
+
+                if (likers)
+                {
+                    return user.Likers.Where(x => x.LikeeId == id)
+                        // return a collection of integers
+                        .Select(i => i.LikerId);
+                }
+                else
+                {
+                    return user.Likees.Where(x => x.LikerId == id).Select(i => i.LikeeId);
+                }
         }
     }
 }
