@@ -48,7 +48,7 @@ namespace PupDate.API.Data
 
         public async Task<PagedList<User>> GetUsers(UserParameters userParameters)
         {
-            var users = _context.Users.Include(p => p.Photos).AsQueryable();
+            var users = _context.Users.Include(p => p.Photos).OrderByDescending(user => user.LastActive).AsQueryable();
 
             users = users.Where(user => user.Id != userParameters.UserId);
             // filter for gender
@@ -60,6 +60,18 @@ namespace PupDate.API.Data
                 var maxDob = DateTime.Today.AddYears(-userParameters.MinimumAge);
 
                 users = users.Where(user => user.DateOfBirth >= minDob && user.DateOfBirth <= maxDob);
+            }
+
+            if (!string.IsNullOrEmpty(userParameters.OrderBy))
+            {
+                switch (userParameters.OrderBy){
+                    case "created": 
+                        users = users.OrderByDescending(u => u.Created);
+                        break;
+                        default: 
+                        users = users.OrderByDescending(u => u.LastActive);
+                        break;
+                }
             }
 
             return await PagedList<User>.CreateAsync(users, userParameters.PageNumber, userParameters.PageSize);
