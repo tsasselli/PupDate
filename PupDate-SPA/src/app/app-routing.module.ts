@@ -1,3 +1,4 @@
+import { MessagesResolver } from './_resolvers/messages.resolver';
 import { PreventUnsavedChanges } from './_guard/prevent-unsaved-changes.guard';
 import { MemberEditResolver } from './_resolvers/member-edit.resolver';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
@@ -34,6 +35,8 @@ const appRoutes: Routes = [
 
     ]
   },
+  { path: 'messages', component: MessagesComponent,
+    resolve: { messages: MessagesResolver }},
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ]
 

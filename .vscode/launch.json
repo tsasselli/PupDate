@@ -4,6 +4,7 @@
    // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
    "version": "0.2.0",
    "configurations": [
+       
        {
            "name": ".NET Core Attach",
            "type": "coreclr",
@@ -47,6 +48,30 @@
             "type": "coreclr",
             "request": "attach",
             "processId": "${command:pickProcess}"
+        },
+                {
+                    "name": "ng serve",
+                    "type": "chrome",
+                    "request": "launch",
+                    "url": "http://localhost:4200/#",
+                    "webRoot": "${workspaceFolder}"
+                },
+                {
+                    "name": "ng test",
+                    "type": "chrome",
+                    "request": "launch",
+                    "url": "http://localhost:9876/debug.html",
+                    "webRoot": "${workspaceFolder}"
+                },
+                {
+                    "name": "ng e2e",
+                    "type": "node",
+                    "request": "launch",
+                    "program": "${workspaceFolder}/node_modules/protractor/bin/protractor",
+                    "protocol": "inspector",
+                    "args": [
+                        "${workspaceFolder}/e2e/protractor.conf.js"
+                    ]
+                }
+            ]
         }
-    ,]
-}
