@@ -50,13 +50,11 @@ namespace PupDate.API.Migrations
 
                     b.Property<int>("SenderId");
 
-                    b.Property<int?>("UserId");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("SenderId");
+                    b.HasIndex("RecipientId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("SenderId");
 
                     b.ToTable("Messages");
                 });
@@ -148,14 +146,15 @@ namespace PupDate.API.Migrations
 
             modelBuilder.Entity("PupDate.API.Models.Message", b =>
                 {
+                    b.HasOne("PupDate.API.Models.User", "Recipient")
+                        .WithMany("MessagesRecieved")
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("PupDate.API.Models.User", "Sender")
                         .WithMany("MessagesSent")
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("PupDate.API.Models.User")
-                        .WithMany("MessagesRecieved")
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("PupDate.API.Models.Photo", b =>

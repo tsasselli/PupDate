@@ -38,6 +38,39 @@ namespace PupDate.API.Data
                 .FirstOrDefaultAsync(p => p.IsMain);
         }
 
+        public async Task<Message> GetMessage(int userId)
+        {
+            return await _context.Messages.FirstOrDefaultAsync(m => m.Id == userId);
+        }
+
+        public async Task<PagedList<Message>> GetMessagesForUser(MessageParameters messageParams)
+        {
+            var messages = _context.Messages
+                .Include(u => u.Sender).ThenInclude(p => p.Photos)
+                .Include(u => u.Recipient).ThenInclude(p => p.Photos)
+                .AsQueryable();
+
+                switch (messageParams.MessageContainer)
+                {
+                    case "Inbox":
+                        messages = messages.Where(u => u.RecipientId == messageParams.UserId);
+                        break;
+                        case "Outbox":
+                        messages = messages.Where(u => u.SenderId == messageParams.UserId);
+                        break;
+                        default:
+                        messages = messages.Where(u => u.RecipientId == messageParams.UserId && u.IsRead == false);
+                        break;
+                }
+            messages = messages.OrderByDescending(d => d.MessageSent);
+            return await PagedList<Message>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
+        }
+
+        public Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Photo> GetPhoto(int id)
         {  // returns the first or default that matches the id of the user that I pass in.
             var photo = await _context.Photos.FirstOrDefaultAsync(p => p.Id == id);
