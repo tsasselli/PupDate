@@ -79,6 +79,10 @@ namespace PupDate.API.Controllers
         
         public async Task<IActionResult> CreateMessage(int userId, CreateMessageDto createMessageDto)
         {
+            var sender = await _repo.GetUser(userId);
+
+            if (sender.Id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
 
             createMessageDto.SenderId = userId;
 
@@ -91,11 +95,10 @@ namespace PupDate.API.Controllers
 
             _repo.Add(message);
 
-            var returnedCreatedMessage = _mapper.Map<CreateMessageDto>(message);
-
-            if (await _repo.SaveAll())
+            if (await _repo.SaveAll()) {
+                var returnedCreatedMessage = _mapper.Map<MessageToReturnDto>(message);
                 return CreatedAtRoute("GetMessage", new {id = message.Id}, returnedCreatedMessage);
-
+            }
             throw new Exception("Creating the message failed to save to the database, please try again.");
         }
     }

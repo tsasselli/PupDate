@@ -12,6 +12,7 @@ import { Message } from '../../_models/Message';
 export class MemberMessagesComponent implements OnInit {
   @Input() recipientId: number;
   messages: Message[];
+  newMessage: any = {};
 
   constructor(private userService: UserService, private authService: AuthService, private alertify: AlertifyService) { }
 
@@ -29,4 +30,15 @@ export class MemberMessagesComponent implements OnInit {
     })
   }
 
+  sendMessage() {
+    this.newMessage.recipientId = this.recipientId;
+    const user = this.authService.decodedToken.nameid
+    this.userService.sendMessage(user, this.newMessage)
+      .subscribe((message: Message) => {
+        this.messages.unshift(message);
+        this.newMessage.content = '';
+      }, error => {
+        this.alertify.error(error);
+      });
+  }
 }
