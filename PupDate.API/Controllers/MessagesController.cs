@@ -101,5 +101,27 @@ namespace PupDate.API.Controllers
             }
             throw new Exception("Creating the message failed to save to the database, please try again.");
         }
+
+        [HttpPost("{id}")]
+
+        public async Task<IActionResult> DeleteMessage(int id, int userId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var messageFromRepo = await _repo.GetMessage(id);
+
+            if (messageFromRepo.SenderId == userId)
+            messageFromRepo.SenderDeleted = true;
+
+            if (messageFromRepo.RecipientId == userId)
+                messageFromRepo.RecipientDeleted = true;
+            if (messageFromRepo.SenderDeleted && messageFromRepo.RecipientDeleted)
+                _repo.Delete(messageFromRepo);
+            if (await _repo.SaveAll())
+                return NoContent();
+
+            throw new Exception("There was an error deleting the message");
+        }
     }
 }
